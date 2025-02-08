@@ -41,3 +41,13 @@ print("\033[31mHello, World!\033[0m")
 print("\033[32mHello, World!\033[0m")
 print("\033[42mHello, World!\033[0m")
 input()
+
+k = 1
+j = 1
+
+print("COMP: ", end='')
+print(str(-k), end='')
+
+for i in range(j):
+	print(" [X][X][X] ", end='')
+	print(-k-4)

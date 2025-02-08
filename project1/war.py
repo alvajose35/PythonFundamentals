@@ -36,6 +36,47 @@ def checkGameOver():
 	else:
 		return False
 
+def war(k, j):
+
+	# Print game screen
+	print("\n----------WAR----------")
+	
+	for i in range(j):
+		if i == 0:
+			print("COMP: ", end='')
+			print(comp_deck[-1], end='')
+		print(" [X][X][X] ", end='')
+		print(comp_deck[-(4*(i+1)+1)], end ='')
+	print()
+
+	
+	for i in range(j):
+		if i == 0:
+			print("USER: ", end='')
+			print(user_deck[-1], end='')
+		print(" [X][X][X] ", end='')
+		print(user_deck[-(4*(i+1)+1)], end='')
+	print()
+
+	# Evaluate winner (card values)
+	if cardValue(comp_deck[-k-4]) > cardValue(user_deck[-k-4]):
+		print("\nComputer Wins War!")
+		for i in range(k+4):
+			comp_pile.append(comp_deck.pop())
+			comp_pile.append(user_deck.pop())
+
+	elif cardValue(comp_deck[-k-4]) < cardValue(user_deck[-k-4]):
+		print("\nUser Wins War!")
+		for i in range(k+4):
+			user_pile.append(comp_deck.pop())
+			user_pile.append(user_deck.pop())
+	
+	else:
+		print("\nSame card again!! War #", j + 1)
+		input()
+		war(k + 4, j + 1)
+
+
 # Declare variables & Create a deck of cards
 deck = [
 	"2♠️", "3♠️", "4♠️", "5♠️", "6♠️", "7♠️", "8♠️", "9♠️", "T♠️", "J♠️", "Q♠️", "K♠️", "A♠️", 
@@ -50,8 +91,8 @@ user_pile = []
 
 dealHand = True
 
-tempDeckComp = ["2♠️", "3♠️", "4♠️", "5♠️", "6♠️"]
-tempDeckUser = ["T♦️", "J♦️", "Q♦️", "K♦️", "A♦️"]
+tempDeckComp = ["5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️", "5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️"]
+tempDeckUser = ["J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️", "J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️"]
 
 # Shuffle cards and plit two piles
 random.shuffle(deck)
@@ -77,7 +118,7 @@ while dealHand:
 	user_card_v	= cardValue(user_deck[-1])
 
 	# PRINT SCREEN
-	print("---------------------------------------")
+	print("\n----------GAME----------")
 
 	print(comp_deck[-1], comp_card_v)
 	print(user_deck[-1], user_card_v)
@@ -86,11 +127,14 @@ while dealHand:
 	print("USER: [" + str(len(user_deck) - 1) + "]  " + user_deck[-1])
 
 	if comp_card_v > user_card_v:
-		print("\nComputer Wins!\n")
+		print("\nComputer Wins Hand!\n")
 	elif comp_card_v < user_card_v:
-		print("\nPlayer Wins!\n")
+		print("\nPlayer Wins Hand!\n")
 	else:
-		print("\nWAR\n")
+		print("\nSame Card!!! War time!!!\n")
+		input()
+		war(1, 1)
+		print("\nBACK FROM FUNCT\n")
 
 
 	print("Computer's Pile:", comp_pile)
@@ -102,8 +146,6 @@ while dealHand:
 	elif comp_card_v < user_card_v:
 		user_pile.append(comp_deck.pop())
 		user_pile.append(user_deck.pop())
-	else:
-		print("WAR GAME")
 
 	input()
 

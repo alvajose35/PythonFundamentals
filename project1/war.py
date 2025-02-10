@@ -20,10 +20,57 @@ def cardValue(card):
 	else:
 		return "ERROR"
 
-def checkGameOver():
+def reshuffle(deck, pile):
+
+	deck = deck + pile
+	random.shuffle(deck)
+	pile = []
+
+	return deck, pile
+
+def checkGameOver(num_of_cards, all_decks):
+
+	# Check Computer
+	if len(all_decks[0]) < num_of_cards:     # compDeck < n
+
+		if len(all_decks[0]) + len(all_decks[1]) < num_of_cards:     # (compDeck & compPile) < n aka Comp LOST
+			
+			print("COMP: Not enough cards in deck and pile combined.")
+			print("Needs: " + str(num_of_cards) + "   Has: " + str(len(all_decks[0]) + len(all_decks[1])) + " total cards.")
+			print("\nGAME OVER. User wins!! (Computer lost)")
+			return True, all_decks
+		
+		elif len(all_decks[0]) + len(all_decks[1]) >= num_of_cards:	    # reshuffle comp
+
+			print("\nComputer reshuffle required...\n")
+			all_decks[0], all_decks[1] = reshuffle(all_decks[0], all_decks[1])
+
+			# Check to see if user also needs reshuffling
+			x, all_decks = checkGameOver(num_of_cards, all_decks)
+
+			return False, all_decks
+	
+	# Check User
+	if len(all_decks[2]) < num_of_cards:     # userDeck < n
+		if len(all_decks[2]) + len(all_decks[3]) < num_of_cards:     # (userDeck & userPile) < n aka User LOST
+
+			print("USER: Not enough cards in deck and pile combined.")
+			print("Needs: " + str(num_of_cards) + "   Has: " + str(len(all_decks[2]) + len(all_decks[3])) + " total cards.")
+			print("\nGAME OVER. Computer wins!! (User lost)")
+			return True, all_decks
+		
+		elif len(all_decks[2]) + len(all_decks[3]) >= num_of_cards:     # reshuffle user
+
+			print("\nUser reshuffle required...\n")
+			all_decks[2], all_decks[3] = reshuffle(all_decks[2], all_decks[3])
+			return False, all_decks
+	
+	# Game Continues
+	return False, all_decks
+
 
 	# Assign global variables
-	global comp_deck, user_deck, comp_pile, user_pile
+	'''global comp_deck, user_deck, comp_pile, user_pile
 	
 	if (len(comp_deck) + len(comp_pile)) == 0:
 		print("Game Over. User wins!! (Computer lost)")
@@ -34,9 +81,22 @@ def checkGameOver():
 		return True
 	
 	else:
-		return False
+		return False'''
 
 def war(k, j):
+
+	global comp_deck, user_deck, comp_pile, user_pile
+
+	# Check game status
+	all_decks = [comp_deck, comp_pile, user_deck, user_pile]
+	gameOver, all_decks = checkGameOver(k + 4, all_decks)
+	if gameOver:
+		exit()
+		return
+	comp_deck = all_decks[0]
+	comp_pile = all_decks[1]
+	user_deck = all_decks[2]
+	user_pile = all_decks[3]
 
 	# Print game screen
 	print("\n----------WAR----------")
@@ -49,7 +109,6 @@ def war(k, j):
 		print(comp_deck[-(4*(i+1)+1)], end ='')
 	print()
 
-	
 	for i in range(j):
 		if i == 0:
 			print("USER: ", end='')
@@ -89,39 +148,43 @@ deck = [
 comp_pile = []
 user_pile = []
 
-dealHand = True
-
-tempDeckComp = ["5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️", "5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️"]
-tempDeckUser = ["J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️", "J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️"]
-
-# Shuffle cards and plit two piles
+# Shuffle cards and split them
 random.shuffle(deck)
 
-# comp_deck = deck[:27]
-# user_deck = deck[27:]
+comp_deck = deck[:27]
+user_deck = deck[27:]
 
+# Un-comment to test reshuffle
+'''tempDeckComp = ["7♠️", "T♠️", "4♠️", "5♠️", "5♠️"]
+tempDeckUser = ["4♦️", "9♦️", "Q♦️", "K♦️", "A♦️"]
 comp_deck = tempDeckComp
-user_deck = tempDeckUser
+user_deck = tempDeckUser'''
 
+# print(comp_deck)
+# print(user_deck)
 
-print(comp_deck)
-print(user_deck)
+while True:
 
-while dealHand:
+	# Check game status
+	all_decks = [comp_deck, comp_pile, user_deck, user_pile]
+	gameOver, all_decks = checkGameOver(1, all_decks)
 
-	# Check status
-	gameOver = checkGameOver()
 	if gameOver:
 		break
+	comp_deck = all_decks[0]
+	comp_pile = all_decks[1]
+	user_deck = all_decks[2]
+	user_pile = all_decks[3]
 	
+	# Assig value to cards
 	comp_card_v = cardValue(comp_deck[-1])
 	user_card_v	= cardValue(user_deck[-1])
 
 	# PRINT SCREEN
 	print("\n----------GAME----------")
 
-	print(comp_deck[-1], comp_card_v)
-	print(user_deck[-1], user_card_v)
+	# print(comp_deck[-1], comp_card_v)
+	# print(user_deck[-1], user_card_v)
 
 	print("COMP: [" + str(len(comp_deck) - 1) + "]  " + comp_deck[-1])
 	print("USER: [" + str(len(user_deck) - 1) + "]  " + user_deck[-1])
@@ -134,11 +197,10 @@ while dealHand:
 		print("\nSame Card!!! War time!!!\n")
 		input()
 		war(1, 1)
-		print("\nBACK FROM FUNCT\n")
+		# print("\nBACK FROM FUNCT\n")
 
-
-	print("Computer's Pile:", comp_pile)
-	print("User's Pile:", user_pile)
+	print(str(len(comp_pile)) + " - Computer's Pile:",  comp_pile)
+	print(str(len(user_pile)) + " - User's Pile:", user_pile)
 
 	if comp_card_v > user_card_v:
 		comp_pile.append(comp_deck.pop())
@@ -149,4 +211,4 @@ while dealHand:
 
 	input()
 
-print("SHUTING OFF")
+print("Thanks for playing")

@@ -1,3 +1,8 @@
-__pycache__/
 Other/
-workshop2.zip
+# week2/__pycache__/
+# week2/my_pkg/__pycache__/
+# workshop2/banking_pkg/__pycache__/
+__pycache__/
+project1/NOTES.txt
+project1/war\[pile\ reshufle\].py
+project1/war\[test\ multiple\ wars\].py

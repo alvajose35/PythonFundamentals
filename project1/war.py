@@ -43,6 +43,7 @@ def checkGameOver(num_of_cards, all_decks):
 		elif len(all_decks[0]) + len(all_decks[1]) >= num_of_cards:	    # reshuffle comp
 
 			print("\nComputer reshuffle required...\n")
+			input()
 			all_decks[0], all_decks[1] = reshuffle(all_decks[0], all_decks[1])
 
 			# Check to see if user also needs reshuffling
@@ -62,6 +63,7 @@ def checkGameOver(num_of_cards, all_decks):
 		elif len(all_decks[2]) + len(all_decks[3]) >= num_of_cards:     # reshuffle user
 
 			print("\nUser reshuffle required...\n")
+			input()
 			all_decks[2], all_decks[3] = reshuffle(all_decks[2], all_decks[3])
 			return False, all_decks
 	
@@ -99,11 +101,11 @@ def war(k, j):
 	user_pile = all_decks[3]
 
 	# Print game screen
-	print("\n----------WAR----------")
+	print("----------WAR----------")
 	
 	for i in range(j):
 		if i == 0:
-			print("COMP: ", end='')
+			print("COMP: <" + str(len(comp_deck) -(4*j+1)) + ">  ", end='')
 			print(comp_deck[-1], end='')
 		print(" [X][X][X] ", end='')
 		print(comp_deck[-(4*(i+1)+1)], end ='')
@@ -111,7 +113,7 @@ def war(k, j):
 
 	for i in range(j):
 		if i == 0:
-			print("USER: ", end='')
+			print("USER: <" + str(len(user_deck) -(4*j+1)) + ">  ", end='')
 			print(user_deck[-1], end='')
 		print(" [X][X][X] ", end='')
 		print(user_deck[-(4*(i+1)+1)], end='')
@@ -119,13 +121,13 @@ def war(k, j):
 
 	# Evaluate winner (card values)
 	if cardValue(comp_deck[-k-4]) > cardValue(user_deck[-k-4]):
-		print("\nComputer Wins War!")
+		print("\nComputer Wins War!\n")
 		for i in range(k+4):
 			comp_pile.append(comp_deck.pop())
 			comp_pile.append(user_deck.pop())
 
 	elif cardValue(comp_deck[-k-4]) < cardValue(user_deck[-k-4]):
-		print("\nUser Wins War!")
+		print("\nUser Wins War!\n")
 		for i in range(k+4):
 			user_pile.append(comp_deck.pop())
 			user_pile.append(user_deck.pop())
@@ -134,7 +136,6 @@ def war(k, j):
 		print("\nSame card again!! War #", j + 1)
 		input()
 		war(k + 4, j + 1)
-
 
 # Declare variables & Create a deck of cards
 deck = [
@@ -150,18 +151,24 @@ user_pile = []
 
 # Shuffle cards and split them
 random.shuffle(deck)
-
 comp_deck = deck[:27]
 user_deck = deck[27:]
 
-# Un-comment to test reshuffle
+# TEST: Multiple wars
+tempDeckComp = ["5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️", "5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️"]
+tempDeckUser = ["J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️", "J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️"]
+comp_deck = tempDeckComp
+user_deck = tempDeckUser
+
+# TEST: Reshuffle
 '''tempDeckComp = ["7♠️", "T♠️", "4♠️", "5♠️", "5♠️"]
 tempDeckUser = ["4♦️", "9♦️", "Q♦️", "K♦️", "A♦️"]
 comp_deck = tempDeckComp
 user_deck = tempDeckUser'''
 
-# print(comp_deck)
-# print(user_deck)
+# TEST: Print inital deck configuration
+'''print(comp_deck)
+print(user_deck)'''
 
 while True:
 
@@ -182,12 +189,12 @@ while True:
 
 	# PRINT SCREEN
 	print("\n----------GAME----------")
-
-	# print(comp_deck[-1], comp_card_v)
-	# print(user_deck[-1], user_card_v)
-
-	print("COMP: [" + str(len(comp_deck) - 1) + "]  " + comp_deck[-1])
-	print("USER: [" + str(len(user_deck) - 1) + "]  " + user_deck[-1])
+	print("COMP: <" + str(len(comp_deck) - 1) + ">  " + comp_deck[-1])
+	print("USER: <" + str(len(user_deck) - 1) + ">  " + user_deck[-1])
+	
+	# TEST: Print card's values
+	'''print(comp_deck[-1], comp_card_v)
+	print(user_deck[-1], user_card_v)'''
 
 	if comp_card_v > user_card_v:
 		print("\nComputer Wins Hand!\n")
@@ -199,8 +206,8 @@ while True:
 		war(1, 1)
 		# print("\nBACK FROM FUNCT\n")
 
-	print(str(len(comp_pile)) + " - Computer's Pile:",  comp_pile)
-	print(str(len(user_pile)) + " - User's Pile:", user_pile)
+	print("COMP Pile: <" + str(len(comp_pile)) + ">", comp_pile)
+	print("USER Pile: <" + str(len(user_pile)) + ">", user_pile)
 
 	if comp_card_v > user_card_v:
 		comp_pile.append(comp_deck.pop())

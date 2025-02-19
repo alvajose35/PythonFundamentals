@@ -51,3 +51,6 @@ print(str(-k), end='')
 for i in range(j):
 	print(" [X][X][X] ", end='')
 	print(-k-4)
+    
+print("\U0001F0BF")
+print("\U0001F600")

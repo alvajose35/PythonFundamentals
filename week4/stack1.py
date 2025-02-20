@@ -21,10 +21,10 @@ class Stack:
 		if self.head == None:
 			return None
 		
-		pop_node = self.head.value
+		pop_node_value = self.head.value
 		self.head = self.head.next
 		self.num_nodes -= 1
-		return pop_node
+		return pop_node_value
 	
 stack = Stack()
 stack.push(1)

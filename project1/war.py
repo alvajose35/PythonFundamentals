@@ -1,12 +1,15 @@
 import random
+import os
 
 # Functions
 def cardValue(card):
 
 	if card[0] == '2' or card[0] == '3' or card[0] == '4' or card[0] == '5' or card[0] == '6' or card[0] == '7' or card[0] == '8' or card[0] == '9':
 		return int(card[0])
-	elif card[0] == 'T':
+	elif card[0] == '1':
 		return 10
+	elif card == 'Jkr':
+		return 15
 	elif card[0] == 'J':
 		return 11
 	elif card[0] == 'Q':
@@ -15,8 +18,6 @@ def cardValue(card):
 		return 13
 	elif card[0] == 'A':
 		return 14
-	elif card[0] == 'X':
-		return 15
 	else:
 		return "ERROR"
 
@@ -137,17 +138,63 @@ def war(k, j):
 		input()
 		war(k + 4, j + 1)
 
+def intro():
+
+	war = """
+                                                                                                
+                                                                                                
+WWWWWWWW                           WWWWWWWW        AAA                  RRRRRRRRRRRRRRRRR   
+W::::::W                           W::::::W       A:::A                 R::::::::::::::::R  
+W::::::W                           W::::::W      A:::::A                R::::::RRRRRR:::::R 
+W::::::W                           W::::::W     A:::::::A               RR:::::R     R:::::R
+ W:::::W           WWWWW           W:::::W     A:::::::::A                R::::R     R:::::R
+  W:::::W         W:::::W         W:::::W     A:::::A:::::A               R::::R     R:::::R
+   W:::::W       W:::::::W       W:::::W     A:::::A A:::::A              R::::RRRRRR:::::R 
+    W:::::W     W:::::::::W     W:::::W     A:::::A   A:::::A             R:::::::::::::RR  
+     W:::::W   W:::::W:::::W   W:::::W     A:::::A     A:::::A            R::::RRRRRR:::::R 
+      W:::::W W:::::W W:::::W W:::::W     A:::::AAAAAAAAA:::::A           R::::R     R:::::R
+       W:::::W:::::W   W:::::W:::::W     A:::::::::::::::::::::A          R::::R     R:::::R
+        W:::::::::W     W:::::::::W     A:::::AAAAAAAAAAAAA:::::A         R::::R     R:::::R
+         W:::::::W       W:::::::W     A:::::A             A:::::A      RR:::::R     R:::::R
+          W:::::W         W:::::W     A:::::A               A:::::A     R::::::R     R:::::R
+           W:::W           W:::W     A:::::A                 A:::::A    R::::::R     R:::::R
+            WWW             WWW     AAAAAAA                   AAAAAAA   RRRRRRRR     RRRRRRR
+                                                                                                
+                                          by Jose V. for Nucamp                                 
+                                                                                                
+                                                                                                
+                                                                                                
+                                                                                                
+                                                                                                
+"""
+	print(war)
+	print("OPTIONS")
+	show = input("Show the decks on top of the screen? (y/N) ").upper()
+	play = input("\n[Press 'ENTER' to continue, 'Q' to quit] ").upper()
+
+	return play, show
+
+def clear_console():
+	"""Clears the console screen."""
+	if os.name == 'nt':
+		os.system('cls')  # For Windows
+	else:
+		os.system('clear')  # For macOS and Linux
+
 # Declare variables & Create a deck of cards
 deck = [
-	"2♠️", "3♠️", "4♠️", "5♠️", "6♠️", "7♠️", "8♠️", "9♠️", "T♠️", "J♠️", "Q♠️", "K♠️", "A♠️", 
-	"2♥️", "3♥️", "4♥️", "5♥️", "6♥️", "7♥️", "8♥️", "9♥️", "T♥️", "J♥️", "Q♥️", "K♥️", "A♥️",
-	"2♦️", "3♦️", "4♦️", "5♦️", "6♦️", "7♦️", "8♦️", "9♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️",
-	"2♣️", "3♣️", "4♣️", "5♣️", "6♣️", "7♣️", "8♣️", "9♣️", "T♣️", "J♣️", "Q♣️", "K♣️", "A♣️",
-	"XB", "XR"
+	"2♠️", "3♠️", "4♠️", "5♠️", "6♠️", "7♠️", "8♠️", "9♠️", "10♠️", "J♠️", "Q♠️", "K♠️", "A♠️", 
+	"2♥️", "3♥️", "4♥️", "5♥️", "6♥️", "7♥️", "8♥️", "9♥️", "10♥️", "J♥️", "Q♥️", "K♥️", "A♥️",
+	"2♦️", "3♦️", "4♦️", "5♦️", "6♦️", "7♦️", "8♦️", "9♦️", "10♦️", "J♦️", "Q♦️", "K♦️", "A♦️",
+	"2♣️", "3♣️", "4♣️", "5♣️", "6♣️", "7♣️", "8♣️", "9♣️", "10♣️", "J♣️", "Q♣️", "K♣️", "A♣️",
+	"Jkr", "Jkr"
 ]
 
 comp_pile = []
 user_pile = []
+play = ""
+show = 'N'
+hands = 0
 
 # Shuffle cards and split them
 random.shuffle(deck)
@@ -155,10 +202,10 @@ comp_deck = deck[:27]
 user_deck = deck[27:]
 
 # TEST: Multiple wars
-tempDeckComp = ["5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️", "5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️"]
+'''tempDeckComp = ["5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️", "5♠️", "T♠️", "3♠️", "4♠️", "5♠️", "A♠️"]
 tempDeckUser = ["J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️", "J♦️", "T♦️", "J♦️", "Q♦️", "K♦️", "A♦️"]
 comp_deck = tempDeckComp
-user_deck = tempDeckUser
+user_deck = tempDeckUser'''
 
 # TEST: Reshuffle
 '''tempDeckComp = ["7♠️", "T♠️", "4♠️", "5♠️", "5♠️"]
@@ -166,11 +213,9 @@ tempDeckUser = ["4♦️", "9♦️", "Q♦️", "K♦️", "A♦️"]
 comp_deck = tempDeckComp
 user_deck = tempDeckUser'''
 
-# TEST: Print inital deck configuration
-'''print(comp_deck)
-print(user_deck)'''
+play, show = intro()
 
-while True:
+while play != 'Q':
 
 	# Check game status
 	all_decks = [comp_deck, comp_pile, user_deck, user_pile]
@@ -183,12 +228,20 @@ while True:
 	user_deck = all_decks[2]
 	user_pile = all_decks[3]
 	
-	# Assig value to cards
+	# Assign value to cards
 	comp_card_v = cardValue(comp_deck[-1])
 	user_card_v	= cardValue(user_deck[-1])
 
+	# Clear the screen
+	clear_console()
+
+	# Show players decks
+	if show == 'Y':
+		print("\nCOMP DECK: ", comp_deck)
+		print("USER DECK: ", user_deck)
+
 	# PRINT SCREEN
-	print("\n----------GAME----------")
+	print(f"\n----------GAME----------                           Hands played: {hands}")
 	print("COMP: <" + str(len(comp_deck) - 1) + ">  " + comp_deck[-1])
 	print("USER: <" + str(len(user_deck) - 1) + ">  " + user_deck[-1])
 	
@@ -199,16 +252,17 @@ while True:
 	if comp_card_v > user_card_v:
 		print("\nComputer Wins Hand!\n")
 	elif comp_card_v < user_card_v:
-		print("\nPlayer Wins Hand!\n")
+		print("\nUser Wins Hand!\n")
 	else:
 		print("\nSame Card!!! War time!!!\n")
-		input()
+		input("[Press 'ENTER' to continue]\n")
 		war(1, 1)
 		# print("\nBACK FROM FUNCT\n")
 
 	print("COMP Pile: <" + str(len(comp_pile)) + ">", comp_pile)
 	print("USER Pile: <" + str(len(user_pile)) + ">", user_pile)
 
+	# Update decks and piles
 	if comp_card_v > user_card_v:
 		comp_pile.append(comp_deck.pop())
 		comp_pile.append(user_deck.pop())
@@ -216,6 +270,8 @@ while True:
 		user_pile.append(comp_deck.pop())
 		user_pile.append(user_deck.pop())
 
-	input()
+	hands += 1
 
-print("Thanks for playing")
+	play = input("\n[Press 'ENTER' to continue, 'Q' to quit] ").upper()
+
+print("\nThanks for playing")

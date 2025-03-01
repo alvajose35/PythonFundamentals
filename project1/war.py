@@ -36,7 +36,7 @@ def checkGameOver(num_of_cards, all_decks):
 
 		if len(all_decks[0]) + len(all_decks[1]) < num_of_cards:     # (compDeck & compPile) < n aka Comp LOST
 			
-			print("COMP: Not enough cards in deck and pile combined.")
+			print("\nCOMP: Not enough cards in deck and pile combined.")
 			print("Needs: " + str(num_of_cards) + "   Has: " + str(len(all_decks[0]) + len(all_decks[1])) + " total cards.")
 			print("\nGAME OVER. User wins!! (Computer lost)")
 			return True, all_decks
@@ -44,7 +44,8 @@ def checkGameOver(num_of_cards, all_decks):
 		elif len(all_decks[0]) + len(all_decks[1]) >= num_of_cards:	    # reshuffle comp
 
 			print("\nComputer reshuffle required...\n")
-			input()
+			if quick != 'Y':
+				input()
 			all_decks[0], all_decks[1] = reshuffle(all_decks[0], all_decks[1])
 
 			# Check to see if user also needs reshuffling
@@ -56,7 +57,7 @@ def checkGameOver(num_of_cards, all_decks):
 	if len(all_decks[2]) < num_of_cards:     # userDeck < n
 		if len(all_decks[2]) + len(all_decks[3]) < num_of_cards:     # (userDeck & userPile) < n aka User LOST
 
-			print("USER: Not enough cards in deck and pile combined.")
+			print("\nUSER: Not enough cards in deck and pile combined.")
 			print("Needs: " + str(num_of_cards) + "   Has: " + str(len(all_decks[2]) + len(all_decks[3])) + " total cards.")
 			print("\nGAME OVER. Computer wins!! (User lost)")
 			return True, all_decks
@@ -64,7 +65,8 @@ def checkGameOver(num_of_cards, all_decks):
 		elif len(all_decks[2]) + len(all_decks[3]) >= num_of_cards:     # reshuffle user
 
 			print("\nUser reshuffle required...\n")
-			input()
+			if quick != 'Y':
+				input()
 			all_decks[2], all_decks[3] = reshuffle(all_decks[2], all_decks[3])
 			return False, all_decks
 	
@@ -88,12 +90,13 @@ def checkGameOver(num_of_cards, all_decks):
 
 def war(k, j):
 
-	global comp_deck, user_deck, comp_pile, user_pile
+	global comp_deck, user_deck, comp_pile, user_pile, quick, comp_hands_won, user_hands_won, comp_wars_won, user_wars_won
 
 	# Check game status
 	all_decks = [comp_deck, comp_pile, user_deck, user_pile]
 	gameOver, all_decks = checkGameOver(k + 4, all_decks)
 	if gameOver:
+		outro()
 		exit()
 		return
 	comp_deck = all_decks[0]
@@ -123,19 +126,24 @@ def war(k, j):
 	# Evaluate winner (card values)
 	if cardValue(comp_deck[-k-4]) > cardValue(user_deck[-k-4]):
 		print("\nComputer Wins War!\n")
+		comp_hands_won += 1
+		comp_wars_won += j
 		for i in range(k+4):
 			comp_pile.append(comp_deck.pop())
 			comp_pile.append(user_deck.pop())
 
 	elif cardValue(comp_deck[-k-4]) < cardValue(user_deck[-k-4]):
 		print("\nUser Wins War!\n")
+		user_hands_won += 1
+		user_wars_won += j
 		for i in range(k+4):
 			user_pile.append(comp_deck.pop())
 			user_pile.append(user_deck.pop())
 	
 	else:
 		print("\nSame card again!! War #", j + 1)
-		input()
+		if quick != 'Y':
+			input()
 		war(k + 4, j + 1)
 
 def intro():
@@ -170,9 +178,27 @@ W::::::W                           W::::::W     A:::::::A               RR:::::R
 	print(war)
 	print("OPTIONS")
 	show = input("Show the decks on top of the screen? (y/N) ").upper()
+	quick = input("Toggle Quick Mode (fast simulation)? (y/N) ").upper()
 	play = input("\n[Press 'ENTER' to continue, 'Q' to quit] ").upper()
 
-	return play, show
+	return play, show, quick
+
+def outro():
+
+	global hands, comp_hands_won, user_hands_won, comp_wars_won, user_wars_won
+
+	print("\nThanks for playing!!")
+	print()
+	print(f"              STATS             ")
+	print(f"--------------------------------")
+	print(f"|      | Hands Won  | Wars Won |")
+	# print(f"|      |     XX     |    XX    |")
+	print(f"| COMP |     {comp_hands_won}     |     {comp_wars_won}    |")
+	print(f"| USER |     {user_hands_won}     |     {user_wars_won}    |")
+	print(f"--------------------------------")
+	print(f" TOTAL HANDS PLAYED: {hands}")
+
+	exit()
 
 def clear_console():
 	"""Clears the console screen."""
@@ -194,7 +220,12 @@ comp_pile = []
 user_pile = []
 play = ""
 show = 'N'
+quick = 'N'
 hands = 0
+comp_hands_won = 0
+user_hands_won = 0
+comp_wars_won = 0
+user_wars_won = 0
 
 # Shuffle cards and split them
 random.shuffle(deck)
@@ -213,7 +244,7 @@ tempDeckUser = ["4♦️", "9♦️", "Q♦️", "K♦️", "A♦️"]
 comp_deck = tempDeckComp
 user_deck = tempDeckUser'''
 
-play, show = intro()
+play, show, quick= intro()
 
 while play != 'Q':
 
@@ -251,11 +282,14 @@ while play != 'Q':
 
 	if comp_card_v > user_card_v:
 		print("\nComputer Wins Hand!\n")
+		comp_hands_won += 1
 	elif comp_card_v < user_card_v:
 		print("\nUser Wins Hand!\n")
+		user_hands_won += 1
 	else:
 		print("\nSame Card!!! War time!!!\n")
-		input("[Press 'ENTER' to continue]\n")
+		if quick != 'Y':
+			input("[Press 'ENTER' to continue]\n")
 		war(1, 1)
 		# print("\nBACK FROM FUNCT\n")
 
@@ -271,7 +305,8 @@ while play != 'Q':
 		user_pile.append(user_deck.pop())
 
 	hands += 1
+		
+	if quick != 'Y':
+		play = input("\n[Press 'ENTER' to continue, 'Q' to quit] ").upper()
 
-	play = input("\n[Press 'ENTER' to continue, 'Q' to quit] ").upper()
-
-print("\nThanks for playing")
+outro()
